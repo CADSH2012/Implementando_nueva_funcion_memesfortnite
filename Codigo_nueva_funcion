@@ -1,0 +1,75 @@
+import discord, random
+
+from discord.ext import commands
+
+
+# La variable intents almacena los privilegios del bot
+intents = discord.Intents.default()
+# Activar el privilegio de lectura de mensajes
+intents.message_content = True
+# Crear un bot en la variable cliente y transferirle los privilegios
+bot = commands.Bot(command_prefix='#', intents=intents)
+
+@bot.event
+async def on_ready():
+    print(f'Hemos iniciado sesión como {bot.user}')
+
+@bot.command()
+async def hola(ctx):
+    await ctx.send(f'Hola, {bot.user}!')
+        
+@bot.group()
+async def cool(ctx):
+    
+    if ctx.invoked_subcommand is None:
+        await ctx.send(f'No, {ctx.subcommand_passed} no es cool') 
+    
+@cool.command(name='Mi_primer_bot')
+async def _bot(ctx):
+    """Is the bot cool?"""
+    await ctx.send('Si, el bot es cool.')
+
+@cool.command(name='El_pais_etrisde')
+async def _bot(ctx):
+    """Is the bot cool?"""
+    await ctx.send('Si, el pais etrisde es cool.')
+
+@bot.command()
+async def repeat(ctx, times: int, content='repeating...'):
+    """Repeats a message multiple times."""
+    for i in range(times):
+        await ctx.send(content)
+
+@bot.command(description='For when you wanna settle the score some other way')
+async def choose(ctx, *choices: str):
+    """Chooses between multiple choices."""
+    await ctx.send(random.choice(choices))
+
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user} (ID: {bot.user.id})')
+    print('------')
+
+
+#agregar codigo para leer imagenes
+
+@bot.command()
+async def mem(ctx):
+    with open('Mod_2_leccion_1\imagenes\mem1.jpeg') as f:
+        # ¡Vamos a almacenar el archivo de la biblioteca Discord convertido en esta variable!
+        picture = discord.File(f)
+    # A continuación, podemos enviar este archivo como parámetro.
+    await ctx.send(file=picture)
+
+
+
+@bot.command()
+async def fort(ctx):
+    imagenes = ["mem4.jpeg", "mem5.jpeg"]
+    imagen_aleatoria = random.choice(imagenes)
+
+    file_path = f"Mod_2_leccion_1\imagenes\{imagen_aleatoria}"
+    
+    with open(file_path, "rb") as f:
+        picture = discord.File(f)
+        await ctx.send(file=picture)
